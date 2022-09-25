@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputAction.h"
 #include "GameFramework/Character.h"
+#include "JJPlayerState.h"
 #include "JJBaseCharacter.generated.h"
 
 USTRUCT()
@@ -19,6 +20,31 @@ struct FInputActions {
 
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* TurnRight;
+
+	UPROPERTY(EditDefaultsOnly)
+	UInputAction* Jump;
+
+	UPROPERTY(EditDefaultsOnly)
+	UInputAction* Jetpack;
+
+	UPROPERTY(EditDefaultsOnly)
+	UInputAction* Interact;
+};
+
+USTRUCT()
+struct FPlayerStates {
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UJJPlayerState* IdleState;
+	UPROPERTY()
+	UJJPlayerState* MovingState;
+	UPROPERTY()
+	UJJPlayerState* JumpingState;
+	UPROPERTY()
+	UJJPlayerState* JetpackActiveState;
+	UPROPERTY()
+	UJJPlayerState* InteractingState;
 };
 
 UCLASS()
@@ -40,7 +66,23 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FInputActions InputActions;
 
+	UPROPERTY(EditDefaultsOnly)
+	UAnimMontage* InteractionMontage;
+	
+	UPROPERTY()
+	UJJPlayerState* CurrentState;
+
+	UPROPERTY()
+	FPlayerStates AllStates;
+
+	FTimerHandle InteractionCompleteHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsInteracting;
+
 protected:
+	void SetupStates();
+	void GoToState(UJJPlayerState* NewState);
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
@@ -51,10 +93,35 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	UFUNCTION()
-	void         TurnRight(const FInputActionValue& Value);
-	void         MoveForward(const FInputActionValue& Value);
-	void         MoveRight(const FInputActionValue& Value);
 
+	UFUNCTION()
+	void HandleInput(UInputAction* InputAction, const FInputActionValue& Value);
+
+	UFUNCTION()
+	void  Interact();
+
+	UFUNCTION()
+	void CompleteInteraction();
+
+private:
+
+	// New Bind Functions
+	UFUNCTION()
+	void HandleInput_MoveForward(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void HandleInput_MoveRight(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void HandleInput_Turn(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void HandleInput_Jump(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void HandleInput_Jetpack(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void HandleInput_Interact(const FInputActionValue& Value);
 
 };
