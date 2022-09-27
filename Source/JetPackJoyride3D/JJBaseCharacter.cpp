@@ -6,7 +6,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
-
+#include "Components/AudioComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AJJBaseCharacter::AJJBaseCharacter()
@@ -25,6 +26,14 @@ AJJBaseCharacter::AJJBaseCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	// Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	JetpackSound = CreateDefaultSubobject<UAudioComponent>(TEXT("JetpackSound"));
+	JetpackSound->SetupAttachment(RootComponent);
+
+	JetpackFx = CreateDefaultSubobject<UNiagaraComponent>(TEXT("JetpackFX"));
+	JetpackFx->SetupAttachment(RootComponent);
+
+	IsJetpackActive = false;
 }
 
 void AJJBaseCharacter::SetupStates()

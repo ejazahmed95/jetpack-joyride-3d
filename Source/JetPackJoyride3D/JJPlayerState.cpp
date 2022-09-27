@@ -4,7 +4,9 @@
 #include "JJPlayerState.h"
 
 #include "JJBaseCharacter.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 UJJPlayerState* UJJPlayerState::Init(AJJBaseCharacter* InPlayer)
 {
@@ -93,6 +95,12 @@ UJJPlayerState* UIdleState::HandleInput(UInputAction* InAction, const FInputActi
 	return nullptr;
 }
 
+void UMovingState::BeginState()
+{
+	Super::BeginState();
+	//UGameplayStatics::PlaySoundAtLocation(GetWorld(), PlayerCharacter->FootStepAudio, FVector());
+}
+
 /*
  * MOVING STATE
  */
@@ -173,6 +181,14 @@ UJJPlayerState* UJumpingState::Tick(float DeltaTime)
 /*
  * JETPACK STATE
  */
+void UJetpackState::BeginState()
+{
+
+	Super::BeginState();
+	PlayerCharacter->JetpackSound->Play();
+	PlayerCharacter->IsJetpackActive = true;
+}
+
 UJJPlayerState* UJetpackState::HandleInput(UInputAction* InAction, const FInputActionValue& InValue)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Input Handling in state = JETPACK"));
@@ -184,6 +200,13 @@ UJJPlayerState* UJetpackState::HandleInput(UInputAction* InAction, const FInputA
 		}
 	}
 	return nullptr;
+}
+
+void UJetpackState::EndState()
+{
+	Super::EndState();
+	PlayerCharacter->JetpackSound->Stop();
+	PlayerCharacter->IsJetpackActive = false;
 }
 
 UJJPlayerState* UJetpackState::Tick(float DeltaTime)

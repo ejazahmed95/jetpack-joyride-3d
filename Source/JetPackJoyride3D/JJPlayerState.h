@@ -61,6 +61,7 @@ UCLASS()
 class UMovingState : public UJJPlayerState {
 	GENERATED_BODY()
 public:
+	virtual void BeginState() override;
 	virtual UJJPlayerState* Tick(float DeltaTime) override;
 	virtual UJJPlayerState* HandleInput(UInputAction* InAction, const FInputActionValue& InValue) override;
 };
@@ -83,8 +84,10 @@ UCLASS()
 class UJetpackState : public UJJPlayerState {
 	GENERATED_BODY()
 public:
+	virtual void BeginState() override;
 	virtual UJJPlayerState* Tick(float DeltaTime) override;
 	virtual UJJPlayerState* HandleInput(UInputAction* InAction, const FInputActionValue& InValue) override;
+	virtual void EndState() override;
 };
 
 /*****************************************************

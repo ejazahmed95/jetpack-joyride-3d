@@ -90,6 +90,8 @@ Engine/Binaries/DotNET/SwarmAgent.Options.xml
 *.exe.config
 *.exe.manifest
 
+Build/
+
 # Ignore project-specific files
 Build/Receipts/*
 DerivedDataCache/*

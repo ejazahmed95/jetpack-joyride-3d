@@ -6,6 +6,7 @@
 #include "InputAction.h"
 #include "GameFramework/Character.h"
 #include "JJPlayerState.h"
+#include "NiagaraComponent.h"
 #include "JJBaseCharacter.generated.h"
 
 USTRUCT()
@@ -30,6 +31,7 @@ struct FInputActions {
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* Interact;
 };
+
 
 USTRUCT()
 struct FPlayerStates {
@@ -63,6 +65,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UNiagaraComponent* JetpackFx;
+	
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* JetpackSound;
+
 	UPROPERTY(EditDefaultsOnly)
 	FInputActions InputActions;
 
@@ -74,6 +82,12 @@ public:
 
 	UPROPERTY()
 	FPlayerStates AllStates;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool IsJetpackActive;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* FootStepAudio;
 
 	FTimerHandle InteractionCompleteHandle;
 
